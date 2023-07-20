@@ -4,9 +4,24 @@ const clear = document.getElementById('clear')
 const negPosBtn = document.getElementById('neg-pos')
 const percentBtn = document.getElementById('percent')
 const operators = document.querySelectorAll('.operation')
+const operationSymbol = document.getElementById('operation-symbol')
 let operation
 const numbers = document.querySelectorAll('.number')
 const equals = document.getElementById('equals')
+
+function calc() {
+    switch (operation) {
+        case '/':
+            return +(parseFloat(prevNum.innerText)/parseFloat(currentNum.innerText)).toFixed(10)
+        case '*':
+            return +(parseFloat(prevNum.innerText)*parseFloat(currentNum.innerText)).toFixed(10)
+        case '-':
+            return +(parseFloat(prevNum.innerText)-parseFloat(currentNum.innerText)).toFixed(10)
+        case '+':
+            return +(parseFloat(prevNum.innerText)+parseFloat(currentNum.innerText)).toFixed(10)
+    }
+}
+
 numbers.forEach(number => {
     number.onclick = ()=> {
         currentNum.innerText += number.innerText
@@ -16,8 +31,18 @@ numbers.forEach(number => {
 operators.forEach(operator => {
     operator.onclick = ()=> {
         operation = operator.getAttribute('data-operation')
-        prevNum.innerText = currentNum.innerText
-        currentNum.innerText = ''
+        console.log(operator.innerText)
+        if (!(prevNum.innerText === '') && !(currentNum.innerText === '')) {    
+            prevNum.innerText = calc()
+            currentNum.innerText = ''
+            operationSymbol.innerText = operator.innerText
+        } else if (!(prevNum.innerText === '') && currentNum.innerText === '') {
+            return
+        } else {
+            prevNum.innerText = currentNum.innerText
+            currentNum.innerText = ''
+            operationSymbol.innerText = operator.innerText
+        }
     }
 })
 
@@ -30,23 +55,13 @@ percentBtn.onclick = ()=> {
 }
 
 equals.onclick = ()=> {
-    function calc() {
-        switch (operation) {
-            case '/':
-                return +(parseFloat(prevNum.innerText)/parseFloat(currentNum.innerText)).toFixed(10)
-            case '*':
-                return +(parseFloat(prevNum.innerText)*parseFloat(currentNum.innerText)).toFixed(10)
-            case '-':
-                return +(parseFloat(prevNum.innerText)-parseFloat(currentNum.innerText)).toFixed(10)
-            case '+':
-                return +(parseFloat(prevNum.innerText)+parseFloat(currentNum.innerText)).toFixed(10)
-        }
-    }
     currentNum.innerText = calc()
     prevNum.innerText = ''
+    operationSymbol.innerText = ''
 }
 
 clear.onclick = ()=> {
     currentNum.innerText = ''
     prevNum.innerText = ''
+    operationSymbol.innerText = ''
 }
